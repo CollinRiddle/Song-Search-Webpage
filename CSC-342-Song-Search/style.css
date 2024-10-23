@@ -1,0 +1,27 @@
+#search, #sort, #bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-right: 10px;
+}
+
+#search-menu, #sort-menu {
+    height: 28px;
+}
+
+#search-bar {
+    height: 15px;
+    width: 400px;
+    padding: 5px;
+    /* position:fixed; */
+    align-items: center;
+
+}
+
+#search-button {
+    height: 28px;
+    padding: 5px 10px;
+    cursor: pointer;
+    /* position: absolute; */
+    align-items: center;
+}

@@ -1,0 +1,93 @@
+<!-- 
+
+ AUTHORS: 
+ - Case Riddle 
+ - Collin Riddle 
+ 
+ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Search</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- <script defer src="script.js"></script> -->
+</head>
+<body>
+
+    <h1>Song Search</h1>
+
+    <!-- Search bar and dropdowns -->
+    <div id="search-container">
+        <input type="text" placeholder="Enter your search terms..." id="search-bar">
+        
+        <!-- Search by dropdown -->
+        <div id="search">
+            <p>Search by:</p>
+            <select id="search-menu">
+                <option value="title">Title</option>
+                <option value="artists">Artist</option>
+                <option value="genres">Genre</option>
+            </select>
+        </div>
+
+        <!-- Sort by dropdown -->
+        <div id="sort">
+            <p>Sort by:</p>
+            <select id="sort-menu">
+                <option value="popularity">Popularity</option>
+                <option value="duration_mins">Duration</option>
+            </select>
+        </div>
+
+        <!-- Explicit checkbox -->
+        <div id="explicit">
+            <p>Include explicit songs?</p>
+            <input type="checkbox" id="explicit-checkbox">
+        </div>
+
+        <!-- Search button -->
+        <button id="search-button">Search</button>
+    </div>
+
+    <div id="display-data"></div>
+
+    <script>
+        // Event listener for the search button
+        document.getElementById('search-button').addEventListener('click', searchFiltering);
+
+        async function searchFiltering() {
+            const inputVal = document.getElementById("search-bar").value;
+            const searchCriteria = document.getElementById("search-menu").value;
+            const sortCriteria = document.getElementById("sort-menu").value;
+            const explicitCheck = document.getElementById("explicit-checkbox").checked;
+            //   
+            // Make a GET request to the Flask backend
+            const response = await fetch(`http://127.0.0.1:5000/search?query=${encodeURIComponent(inputVal)}&search_by=${searchCriteria}&sort_by=${sortCriteria}&explicit=${explicitCheck}`);
+            
+            if (!response.ok) {
+                console.error("Failed to fetch data:", response.status);
+                return;
+            }
+
+            const results = await response.json();
+            displayResults(results);
+        }
+
+        // Display the filtered and sorted songs
+        function displayResults(songs) {
+            const displayDiv = document.getElementById("display-data");
+            displayDiv.innerHTML = ""; // Clear previous results
+
+            songs.forEach(song => {
+                const songElement = document.createElement("p");
+                songElement.textContent = `${song.title} by ${song.artists.join(", ")} - ${song.duration_mins} minutes, Popularity: ${song.popularity}`;
+                displayDiv.appendChild(songElement);
+            });
+        }
+    </script>
+
+</body>
+</html>
